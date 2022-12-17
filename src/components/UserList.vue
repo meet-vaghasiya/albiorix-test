@@ -1,14 +1,46 @@
 <template>
-  <h1>Hello {{ name }}</h1>
+  <div class="w-2/3 m-auto">
+    <div class="flex justify-between">
+      <input
+        class="border-2 border-slate-400 hover:border-black w-1/3 py-2 px-4"
+        type="text"
+        placeholder="Search by name,email or mobile number..."
+        v-model.trim="search"
+      />
+      <button
+        class="bg-sky-500 text-white font-semibold px-4 py-2"
+        @click="addUser"
+      >
+        Add New User
+      </button>
+    </div>
+
+    <base-modal v-model="isModalOpen" title="Add user">
+      <h1>Hello world</h1>
+    </base-modal>
+  </div>
 </template>
 
 <script>
+import BaseModal from "@/common/BaseModal.vue";
 import { mapState } from "vuex";
 // import { mapState } from "vuex";
 
 export default {
+  components: { BaseModal },
+  data() {
+    return {
+      search: "",
+      isModalOpen: false,
+    };
+  },
   computed: {
     ...mapState("users", ["name"]),
+  },
+  methods: {
+    addUser() {
+      this.isModalOpen = true;
+    },
   },
 };
 </script>
