@@ -7,27 +7,23 @@
         placeholder="Search by name,email or mobile number..."
         v-model.trim="search"
       />
-      <button
-        class="bg-sky-500 text-white font-semibold px-4 py-2"
-        @click="addUser"
-      >
+      <custom-button type="primary" size="lg" @click="addUser">
         Add New User
-      </button>
+      </custom-button>
     </div>
 
-    <base-modal v-model="isModalOpen" title="Add user">
-      <h1>Hello world</h1>
-    </base-modal>
+    <base-modal v-model="isModalOpen" title="Add user"> </base-modal>
   </div>
 </template>
 
 <script>
 import BaseModal from "@/common/BaseModal.vue";
 import { mapState } from "vuex";
+import CustomButton from "@/common/CustomButton.vue";
 // import { mapState } from "vuex";
 
 export default {
-  components: { BaseModal },
+  components: { BaseModal, CustomButton },
   data() {
     return {
       search: "",

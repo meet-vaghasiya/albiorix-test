@@ -6,22 +6,29 @@
       content-class="modal-content"
       v-slot="{ close }"
     >
-      <div class="flex justify-between">
-        <h2 class="h2">{{ title }}</h2>
-        <button
-          class="modal-close rounded-full bg-slate-200 grid place-content-center"
-          @click="close"
-        >
-          x
-        </button>
+      <div class="flex justify-between items-center py-3">
+        <h2 class="text-2xl">{{ title }}</h2>
+        <button class="modal-close text-2xl" @click="close">&times;</button>
       </div>
       <slot></slot>
+      <slot name="actions">
+        <div class="flex justify-end items-center gap-x-3">
+          <custom-button class="bg-slate-100" @click="close"
+            >Cancel</custom-button
+          >
+          <custom-button type="primary">Submit</custom-button>
+        </div>
+      </slot>
     </vue-final-modal>
   </div>
 </template>
 
 <script>
+import CustomButton from "./CustomButton.vue";
 export default {
+  components: {
+    CustomButton,
+  },
   props: {
     value: {
       required: true,
