@@ -12,18 +12,21 @@
       </custom-button>
     </div>
 
-    <base-modal v-model="isModalOpen" title="Add user"> </base-modal>
+    <base-modal v-model="isModalOpen" title="Add user">
+      <user-form />
+    </base-modal>
   </div>
 </template>
 
 <script>
-import BaseModal from "@/common/BaseModal.vue";
+import BaseModal from "@/components/common/BaseModal.vue";
 import { mapState } from "vuex";
-import CustomButton from "@/common/CustomButton.vue";
+import CustomButton from "@/components/common/CustomButton.vue";
+import UserForm from "./UserForm.vue";
 // import { mapState } from "vuex";
 
 export default {
-  components: { BaseModal, CustomButton },
+  components: { BaseModal, CustomButton, UserForm },
   data() {
     return {
       search: "",
