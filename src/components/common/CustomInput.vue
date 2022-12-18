@@ -4,7 +4,7 @@
     <form-group :validator="v" v-bind="{ label }">
       <input
         class="border border-gray-400 px-3 py-1 w-full"
-        type="text"
+        v-bind="{ type }"
         id="label"
         v-model="inputVal"
         placeholder="Enter your name"
@@ -16,6 +16,10 @@
 <script>
 export default {
   props: {
+    type: {
+      type: String,
+      default: "text",
+    },
     label: {
       required: false,
       type: String,

@@ -11,9 +11,9 @@
         Add New User
       </custom-button>
     </div>
-
-    <base-modal v-model="isModalOpen" title="Add user">
-      <user-form />
+    <user-table />
+    <base-modal v-model="isModalOpen" title="Add user" v-slot="{ close }">
+      <user-form @close="close" />
     </base-modal>
   </div>
 </template>
@@ -23,10 +23,11 @@ import BaseModal from "@/components/common/BaseModal.vue";
 import { mapState } from "vuex";
 import CustomButton from "@/components/common/CustomButton.vue";
 import UserForm from "./UserForm.vue";
+import UserTable from "./UserTable.vue";
 // import { mapState } from "vuex";
 
 export default {
-  components: { BaseModal, CustomButton, UserForm },
+  components: { BaseModal, CustomButton, UserForm, UserTable },
   data() {
     return {
       search: "",

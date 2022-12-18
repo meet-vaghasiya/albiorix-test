@@ -1,13 +1,8 @@
 <template>
-  <div class="form-group" :class="{ error: hasErrors }">
+  <div class="form-group mb-3" :class="{ error: hasErrors }">
     <slot />
     <div class="errors" v-if="hasErrors">
-      <div
-        class="text-red-600 text-xs"
-        v-for="(error, index) in activeErrorMessages"
-        :key="index"
-        v-html="error"
-      ></div>
+      <div class="text-red-600 text-xs" v-html="activeErrorMessages[0]"></div>
     </div>
   </div>
 </template>

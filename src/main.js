@@ -17,8 +17,12 @@ Vue.use(VuelidateErrorExtractor, {
   i18n: false,
   // Define common validation messages.
   messages: {
-    required: "&#x26A0; {attribute} is required!",
-    email: "&#x26A0; {attribute} is not a valid Email address.",
+    required: "{attribute} is required!",
+    email: "{attribute} is not a valid Email address.",
+    alpha: "Only alphabets are allowed.",
+    minLength: "{attribute} should not be less than  { min }",
+    maxLength: "{attribute} should not be less than  { max }",
+    numeric: "Only number are allowed.",
   },
   template: CustomError,
 });
