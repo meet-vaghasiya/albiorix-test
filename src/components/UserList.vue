@@ -1,8 +1,8 @@
 <template>
-  <div class="w-2/3 m-auto">
+  <div class="w-3/5 m-auto">
     <div class="flex justify-between">
-      <input
-        class="border-2 border-slate-400 hover:border-black w-1/3 py-2 px-4"
+      <custom-input
+        class="w-2/5"
         type="text"
         placeholder="Search by name,email or mobile number..."
         v-model.trim="search"
@@ -11,10 +11,10 @@
         Add New User
       </custom-button>
     </div>
-    <user-table @editData="editData" />
+    <user-table @editData="editData" :users="filUsers" />
     <base-modal
       v-model="isModalOpen"
-      title="Add user"
+      :title="!editDetails ? 'Add user' : 'Edit user'"
       v-slot="{ close }"
       @closed="modalClosed"
     >
@@ -30,25 +30,52 @@
 
 <script>
 import BaseModal from "@/components/common/BaseModal.vue";
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 import CustomButton from "@/components/common/CustomButton.vue";
 import UserForm from "./UserForm.vue";
 import UserTable from "./UserTable.vue";
+import CustomInput from "./common/CustomInput.vue";
 // import { mapState } from "vuex";
 
 export default {
-  components: { BaseModal, CustomButton, UserForm, UserTable },
+  components: { BaseModal, CustomButton, UserForm, UserTable, CustomInput },
   data() {
     return {
       search: "",
       isModalOpen: false,
       editDetails: false,
+      debounce: null,
+      filUsers: this.users,
     };
   },
   computed: {
-    ...mapState("users", ["name"]),
+    ...mapGetters("users", ["users"]),
   },
+  watch: {
+    users() {
+      this.filterUsers();
+    },
+    search: {
+      immediate: true,
+      handler() {
+        clearTimeout(this.debounce);
+        this.debounce = setTimeout(() => {
+          this.filterUsers();
+        }, 600);
+      },
+    },
+  },
+
   methods: {
+    filterUsers() {
+      if (this.search.length < 3) {
+        this.filUsers = this.users;
+      } else {
+        this.filUsers = this.users.filter((user) =>
+          user.name.includes(this.search)
+        );
+      }
+    },
     addUser() {
       this.isModalOpen = true;
     },

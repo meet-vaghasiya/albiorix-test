@@ -13,14 +13,14 @@
         type="text"
         :v="$v.form.email"
         v-model="$v.form.email.$model"
-        placeholder="Enter your name"
+        placeholder="Enter your email"
       />
       <custom-input
         label="Mobile"
         type="text"
         :v="$v.form.mobile"
         v-model="$v.form.mobile.$model"
-        placeholder="Enter your name"
+        placeholder="Enter your mobile"
       />
       <custom-input
         label="Date of birth"
@@ -47,9 +47,9 @@
 
 <script>
 import CustomInput from "@/components/common/CustomInput.vue";
-import { required, email, alpha } from "vuelidate/lib/validators";
+import { required, email } from "vuelidate/lib/validators";
 import CustomButton from "./common/CustomButton.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   components: {
     CustomInput,
@@ -61,32 +61,42 @@ export default {
       default: () => {},
     },
   },
-  watch: {
-    editDetails(newVal) {
-      this.form = {
-        ...this.defaultValue,
-        ...newVal,
-      };
-    },
-  },
+
   data() {
     return {
       submitting: false,
-      form: {
-        ...this.defaultValue,
-        ...this.editDetails,
-      },
+      form: this.defaultData(),
     };
   },
+  created() {
+    if (this.editDetails) {
+      this.setEditData(this.editDetails);
+    }
+  },
+  watch: {
+    editDetails(newVal) {
+      if (newVal) {
+        this.setEditData(newVal);
+      } else {
+        this.setEditData(this.defaultData());
+      }
+    },
+  },
+
   validations: {
     form: {
       name: {
         required,
-        alpha,
       },
       email: {
         required,
         email,
+        isUnique(val, curr) {
+          const user = this.users.find(
+            (user) => user.email === val && user.id !== curr.id
+          );
+          return !user;
+        },
       },
       mobile: {
         required,
@@ -96,17 +106,16 @@ export default {
       },
     },
   },
+  computed: {
+    ...mapGetters("users", ["users"]),
+  },
   methods: {
     ...mapActions("users", ["addUser", "editUser"]),
-    defaultValue() {
-      return {
-        name: "",
-        email: "",
-        mobile: "",
-        birthDate: "",
-      };
-    },
+
     async onSubmit() {
+      const invalid = (this.$v.form.$touch(), this.$v.form.$invalid);
+      if (invalid) return;
+
       try {
         this.submitting = true;
         if (!this.editDetails) {
@@ -120,7 +129,22 @@ export default {
       } finally {
         this.submitting = false;
       }
-      console.log("submitted");
+    },
+    setEditData(editDetails) {
+      this.form.name = editDetails.name;
+      this.form.email = editDetails.email;
+      this.form.mobile = editDetails.mobile;
+      this.form.birthDate = editDetails.birthDate;
+      this.form.id = editDetails.id;
+    },
+
+    defaultData() {
+      return {
+        name: "",
+        email: "",
+        mobile: "",
+        birthDate: "",
+      };
     },
   },
 };

@@ -4,10 +4,9 @@
     <form-group :validator="v" v-bind="{ label }">
       <input
         class="border border-gray-400 px-3 py-1 w-full"
-        v-bind="{ type }"
+        v-bind="{ type, placeholder }"
         id="label"
         v-model="inputVal"
-        placeholder="Enter your name"
       />
     </form-group>
   </div>
@@ -26,7 +25,7 @@ export default {
     },
     v: {
       type: Object,
-      required: true,
+      required: false,
     },
     placeholder: {
       required: false,

@@ -23,6 +23,7 @@ Vue.use(VuelidateErrorExtractor, {
     minLength: "{attribute} should not be less than  { min }",
     maxLength: "{attribute} should not be less than  { max }",
     numeric: "Only number are allowed.",
+    isUnique: "{attribute} should be unique.",
   },
   template: CustomError,
 });

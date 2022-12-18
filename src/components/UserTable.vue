@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="w-4/5 grid grid-cols-6 table mt-20 m-auto bg-white">
+    <div class="grid grid-cols-6 table mt-20 m-auto bg-white">
       <div
         class="font-2xl font-bold"
         v-for="(header, index) in headers"
@@ -13,7 +13,7 @@
         <div :key="'name' + id" class="col-start-1">{{ name }}</div>
         <div :key="'email' + id">{{ email }}</div>
         <div :key="'mobile' + id">{{ mobile }}</div>
-        <div :key="'birthDate' + id">{{ birthDate }}</div>
+        <div :key="'birthDate' + id">{{ birthDate | dateFormat }}</div>
         <div
           :key="'action' + id"
           class="flex gap-x-2 items-center col-span-2"
@@ -36,6 +36,9 @@
           />
         </div>
       </template>
+      <div class="col-span-full text-center py-4" v-if="!users.length">
+        No users found.
+      </div>
     </div>
     <base-modal
       v-model="isModalOpen"
@@ -61,11 +64,17 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 import BaseModal from "./common/BaseModal.vue";
 import CustomButton from "./common/CustomButton.vue";
 export default {
   components: { CustomButton, BaseModal },
+  props: {
+    users: {
+      required: true,
+      default: () => [],
+    },
+  },
   data() {
     return {
       headers: ["Name", "Email", "Mobile", "Date of Birth", "Actions"],
@@ -75,9 +84,12 @@ export default {
       loading: false,
     };
   },
-  computed: {
-    ...mapGetters("users", ["users"]),
+  filters: {
+    dateFormat(val) {
+      return val.split("-").reverse().join("/");
+    },
   },
+
   methods: {
     ...mapActions("users", ["deleteUser"]),
     async remove() {
