@@ -13,8 +13,8 @@ export default {
       {
         id: "4ssfg",
         name: "mit",
-        email: "meetvaghasiya2012@gmail.com",
-        mobile: "7069794804",
+        email: "abc@gmail.com",
+        mobile: "8888887788",
         birthDate: "1997-11-20",
       },
     ],

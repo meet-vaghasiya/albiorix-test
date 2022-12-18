@@ -36,7 +36,7 @@ import UserForm from "./UserForm.vue";
 import UserTable from "./UserTable.vue";
 import CustomInput from "./common/CustomInput.vue";
 // import { mapState } from "vuex";
-
+import { FILTERABLE_KEY } from "@/constants";
 export default {
   components: { BaseModal, CustomButton, UserForm, UserTable, CustomInput },
   data() {
@@ -72,7 +72,7 @@ export default {
         this.filUsers = this.users;
       } else {
         this.filUsers = this.users.filter((user) =>
-          user.name.includes(this.search)
+          FILTERABLE_KEY.some((key) => user[key].includes(this.search))
         );
       }
     },
