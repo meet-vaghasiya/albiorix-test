@@ -55,14 +55,26 @@ export default {
     CustomInput,
     CustomButton,
   },
+  props: {
+    editDetails: {
+      required: false,
+      default: () => {},
+    },
+  },
+  watch: {
+    editDetails(newVal) {
+      this.form = {
+        ...this.defaultValue,
+        ...newVal,
+      };
+    },
+  },
   data() {
     return {
       submitting: false,
       form: {
-        name: "",
-        email: "",
-        mobile: "",
-        birthDate: "",
+        ...this.defaultValue,
+        ...this.editDetails,
       },
     };
   },
@@ -85,16 +97,24 @@ export default {
     },
   },
   methods: {
-    ...mapActions("users", ["addUser"]),
+    ...mapActions("users", ["addUser", "editUser"]),
+    defaultValue() {
+      return {
+        name: "",
+        email: "",
+        mobile: "",
+        birthDate: "",
+      };
+    },
     async onSubmit() {
-      // const isInvalid = (this.$v.$touch(), this.$v.$invalid);
-      // if (isInvalid) {
-      //   console.log("not valid");
-      //   return;
-      // }
       try {
         this.submitting = true;
-        await this.addUser(this.form);
+        if (!this.editDetails) {
+          await this.addUser(this.form);
+        } else {
+          await this.editUser(this.form);
+        }
+        this.$emit("submitted");
       } catch (error) {
         console.log(error.response);
       } finally {

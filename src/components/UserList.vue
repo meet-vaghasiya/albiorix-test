@@ -11,9 +11,19 @@
         Add New User
       </custom-button>
     </div>
-    <user-table />
-    <base-modal v-model="isModalOpen" title="Add user" v-slot="{ close }">
-      <user-form @close="close" />
+    <user-table @editData="editData" />
+    <base-modal
+      v-model="isModalOpen"
+      title="Add user"
+      v-slot="{ close }"
+      @closed="modalClosed"
+    >
+      <user-form
+        @submitted="close"
+        ref="userForm"
+        @close="close"
+        v-bind="{ editDetails }"
+      />
     </base-modal>
   </div>
 </template>
@@ -32,6 +42,7 @@ export default {
     return {
       search: "",
       isModalOpen: false,
+      editDetails: false,
     };
   },
   computed: {
@@ -40,6 +51,17 @@ export default {
   methods: {
     addUser() {
       this.isModalOpen = true;
+    },
+    editData(data) {
+      this.editDetails = { ...data };
+      this.isModalOpen = true;
+    },
+    modalClosed() {
+      this.resetFormValidation();
+      this.editDetails = null;
+    },
+    resetFormValidation() {
+      this.$refs.userForm.$v.form.$reset();
     },
   },
 };

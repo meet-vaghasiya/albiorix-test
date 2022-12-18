@@ -4,6 +4,7 @@
       v-model="isOpen"
       classes="modal-container"
       content-class="modal-content"
+      @closed="$emit('closed')"
       v-slot="{ close }"
     >
       <div class="flex justify-between items-center py-3">

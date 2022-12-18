@@ -23,7 +23,7 @@ export default {
       type: String,
       default: "grey",
       validator(val) {
-        return ["primary", "grey"].includes(val);
+        return ["primary", "grey", "danger"].includes(val);
       },
     },
     size: {
@@ -41,6 +41,7 @@ export default {
       return {
         "bg-slate-100 text-black": this.type === "grey",
         "bg-blue-600 text-white": this.type === "primary",
+        "bg-red-600 text-white": this.type === "danger",
         "py-1 px-3": this.size === "sm",
         "py-2 px-5": this.size === "md",
         "py-4 px-8": this.size === "lg",

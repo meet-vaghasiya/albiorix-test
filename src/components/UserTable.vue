@@ -1,36 +1,96 @@
 <template>
-  <div class="grid grid-cols-5 table mt-20 w-3/4 m-auto bg-white">
-    <div
-      class="font-2xl font-bold"
-      v-for="(header, index) in headers"
-      :key="index"
-    >
-      {{ header }}
-    </div>
-
-    <template v-for="{ name, email, mobile, birthDate } in users">
-      <div :key="name">{{ name }}</div>
-      <div :key="email">{{ email }}</div>
-      <div :key="mobile">{{ mobile }}</div>
-      <div :key="birthDate">{{ birthDate }}</div>
-      <div :key="birthDate">
-        <custom-button />
-        <custom-button />
+  <div>
+    <div class="w-4/5 grid grid-cols-6 table mt-20 m-auto bg-white">
+      <div
+        class="font-2xl font-bold"
+        v-for="(header, index) in headers"
+        :key="index"
+        :class="{ 'col-span-2': index === headers.length - 1 }"
+      >
+        {{ header }}
       </div>
-    </template>
+      <template v-for="{ id, name, email, mobile, birthDate } in users">
+        <div :key="'name' + id" class="col-start-1">{{ name }}</div>
+        <div :key="'email' + id">{{ email }}</div>
+        <div :key="'mobile' + id">{{ mobile }}</div>
+        <div :key="'birthDate' + id">{{ birthDate }}</div>
+        <div
+          :key="'action' + id"
+          class="flex gap-x-2 items-center col-span-2"
+          @click="currentUser = { id, name, email, mobile, birthDate }"
+        >
+          <custom-button
+            @click="
+              editData = { id, name, email, mobile, birthDate };
+              $emit('editData', editData);
+            "
+            type="primary"
+            size="sm"
+            text="Edit"
+          />
+          <custom-button
+            @click="isModalOpen = true"
+            type="danger"
+            size="sm"
+            text="Delete"
+          />
+        </div>
+      </template>
+    </div>
+    <base-modal
+      v-model="isModalOpen"
+      title="Delete user"
+      v-slot="{ close }"
+      @closed="currentUser = null"
+    >
+      <h3 class="text-center text-2xl mb-4">
+        Are you sure you want to delete this {{ currentUser?.name }} ?
+      </h3>
+      <div class="my-5 mt-7 flex justify-end gap-x-3">
+        <custom-button @click="close" type="primary" size="sm" text="Cancel" />
+        <custom-button
+          :loading="loading"
+          type="danger"
+          @click="remove"
+          size="sm"
+          text="Yes, Delete"
+        />
+      </div>
+    </base-modal>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+import BaseModal from "./common/BaseModal.vue";
+import CustomButton from "./common/CustomButton.vue";
 export default {
+  components: { CustomButton, BaseModal },
   data() {
     return {
       headers: ["Name", "Email", "Mobile", "Date of Birth", "Actions"],
+      editData: null,
+      isModalOpen: false,
+      currentUser: null,
+      loading: false,
     };
   },
   computed: {
     ...mapGetters("users", ["users"]),
+  },
+  methods: {
+    ...mapActions("users", ["deleteUser"]),
+    async remove() {
+      try {
+        this.loading = true;
+        await this.deleteUser(this.currentUser);
+        this.loading = false;
+        this.isModalOpen = false;
+        this.currentUser = null;
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
 </script>
@@ -40,5 +100,6 @@ export default {
   word-break: break-all;
   padding: 5px 20px;
   border: 1px solid;
+  align-items: center;
 }
 </style>
